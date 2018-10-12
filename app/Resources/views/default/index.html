@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="/js/connectivity.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-10">
+        <form action="">
+          <div class="form-group">
+            <label for="messageText">Message</label>
+            <textarea class="form-control" name="text" id="messageText" rows="4"></textarea>
+          </div>
+          <input class="btn btn-primary" type="button" value="Send" onclick="sendMessage($('#messageText').val())">
+        </form>
+      </div>
+      <div class="col-2">
+        <form action="">
+          <div class="form-check form-check-inline">
+            <input type="checkbox" id="socket" true><label for="socket">socket</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type="checkbox" id="http"><label for="http">http</label>
+          </div>
+          <div class="form-group">
+            <label for="delay">http update delay</label>
+            <input type="text" class="form-control" name="delay" id="delay">
+          </div>
+          <div class="btn-group">
+            <input class="btn btn-primary" type="button" value="Connect" onclick="connectivity.subscribe({useSockets : $('#socket').is(':checked'), useHTTP : $('#http').is(':checked'), delay : $('#delay').val(),callback : renderMessage})">
+            <input class="btn btn-dark" type="button" value="Disconnect" onclick="connectivity.unsubscribe({useSockets : $('#socket').is(':checked'), useHTTP : $('#http').is(':checked')})">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row" style="padding-top: 20px;">
+      <div class="container-fluid">
+        <ul class="list-group list-group-flush" id="messages"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const renderMessage = function (data) {
+      $('#messages').append($('<li class="list-group-item">').text(data.message));
+    }
+
+    const sendMessage = function (messageText) {
+      console.log(messageText);
+      $.ajax({
+        type: "POST",
+        url: "/newmessage",
+        dataType: "json",
+        data: {
+          message: messageText
+        },
+        complete: function () {
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
