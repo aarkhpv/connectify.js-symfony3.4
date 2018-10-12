@@ -8,6 +8,8 @@
   composer install
   php bin/console doctrine:database:createcomposer install
   php bin/console doctrine:schema:update --force
+  cd .\nodeReceive\ 
+  npm install
 ```
 
 * Usage:
